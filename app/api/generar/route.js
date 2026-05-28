@@ -17,7 +17,7 @@ PRECIO: $[precio]
 ✅ [especificación técnica concreta]
 ✅ [especificación técnica concreta]
 ✅ [especificación técnica concreta]
-✅ [garantía oficial o diferencial]
+✅ [X meses/años de garantía oficial - solo si encontrás el dato, sino omitir este punto]
 
 Reglas estrictas:
 - Usá SOLO datos reales de la búsqueda web (potencia en W, voltaje, RPM, medidas, peso, materiales, etc.)
