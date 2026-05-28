@@ -9,15 +9,13 @@ FORMATO DE SALIDA — seguí este ejemplo al pie de la letra:
 
 Lijadora de Banda 1010W EPLS0331 - Emtop
 
-PRECIO: $85.000
+*PRECIO: $85.000*
 
 ✅ Motor 1010W / 220V
 ✅ Velocidad 300 m/min
 ✅ Banda abrasiva 75 x 533 mm
 ✅ Peso 3.8 kg
 ✅ 12 meses de garantía oficial
-
----
 
 Reglas:
 1. El título siempre es: Nombre del producto SKU - Marca (en ese orden exacto)
@@ -92,7 +90,9 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
     messages.push({ role: "assistant", content: data.content });
 
     if (data.stop_reason === "end_turn") {
-      texto = data.content?.find((b) => b.type === "text")?.text?.trim() ?? "";
+      texto = (data.content?.find((b) => b.type === "text")?.text ?? "")
+        .replace(/\n---+\n?/g, "")
+        .trim();
       break;
     }
 
