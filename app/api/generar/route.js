@@ -25,6 +25,9 @@ Reglas: usá datos reales de la búsqueda web y de la foto. No inventes specs. S
 export async function POST(request) {
   const { imageBase64, sku, marca, precio, nota } = await request.json();
 
+  // Strip BOM (﻿) that PowerShell sometimes injects into env vars
+  const ANTHROPIC_API_KEY = (process.env.ANTHROPIC_API_KEY || "").replace(/^﻿/, "");
+
   const userText = `Generá una publicación para WhatsApp para este producto:
 - SKU: ${sku}
 - Marca: ${marca}
@@ -65,7 +68,7 @@ Primero buscá el producto "${marca} ${sku}" en internet para obtener las specs 
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.ANTHROPIC_API_KEY,
+        "x-api-key": ANTHROPIC_API_KEY,
         "anthropic-version": "2023-06-01",
         "anthropic-beta": "web-search-2025-03-05",
       },
