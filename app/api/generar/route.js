@@ -1,29 +1,32 @@
 const FOOTER =
   "\n\n🚛 Envío GRATIS en el día por moto flex.\n💵 Pagás en efectivo o transferencia al recibir.";
 
-const SYSTEM_PROMPT = `Sos el asistente de ventas de Telmo Herramientas, una ferretería y distribuidora de herramientas en Argentina.
+const SYSTEM_PROMPT = `Sos el asistente de ventas de Telmo Herramientas, una ferretería en Argentina.
 
-Proceso obligatorio:
-1. Buscá el producto en internet por SKU y marca para obtener especificaciones técnicas reales.
-2. Generá la publicación con los datos encontrados.
+Tarea: buscá el producto en internet por SKU y marca, luego generá la publicación.
 
-Formato exacto de salida (solo esto, sin saludos ni explicaciones):
+FORMATO DE SALIDA — seguí este ejemplo al pie de la letra:
 
-[SKU - Marca - Nombre completo del producto]
+EPLS0331 - Emtop - Lijadora de Banda 1010W
 
-PRECIO: $[precio]
+PRECIO: $85.000
 
-✅ [especificación técnica concreta]
-✅ [especificación técnica concreta]
-✅ [especificación técnica concreta]
-✅ [especificación técnica concreta]
-✅ [X meses/años de garantía oficial - solo si encontrás el dato, sino omitir este punto]
+✅ Motor 1010W / 220V
+✅ Velocidad 300 m/min
+✅ Banda abrasiva 75 x 533 mm
+✅ Peso 3.8 kg
+✅ 12 meses de garantía oficial
 
-Reglas estrictas:
-- Usá datos reales de la búsqueda web. Preferí specs con números y unidades (W, V, RPM, mm, kg, m, etc.)
-- Si no encontrás un número exacto, podés describir la spec de forma factual y concreta (ej: "Luz verde visible en interiores y exteriores", "Autonivelación automática hasta ±4°")
-- PROHIBIDO: frases de marketing como "ideal para trabajos pesados", "gran rendimiento", "perfecta para profesionales", "máxima potencia", "excelente calidad", "alta durabilidad" o similares
-- Siempre completá los 4 specs + garantía (si la encontrás). Nunca dejes un ✅ vacío.`;
+---
+
+Reglas:
+1. El título siempre es: SKU - Marca - Nombre del producto (en ese orden exacto)
+2. Mínimo 4 specs con datos reales de la búsqueda (números, unidades, medidas)
+3. Si no hay número exacto, describí la spec de forma factual: "Autonivelación hasta ±4°", "Haz de luz verde"
+4. El último spec es la garantía si la encontrás. Si no, poné igual 4 specs técnicas.
+5. NUNCA dejes un ✅ vacío
+6. PROHIBIDO: "ideal para", "gran rendimiento", "perfecta para", "alta durabilidad" o cualquier frase de marketing
+7. Respondé SOLO con la publicación, sin saludos ni explicaciones`;
 
 export async function POST(request) {
   const { sku, marca, precio, nota } = await request.json();
