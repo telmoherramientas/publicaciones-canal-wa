@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useState } from "react";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const [imgFile, setImgFile] = useState(null);
-  const [imgPreview, setImgPreview] = useState(null);
   const [sku, setSku] = useState("");
   const [marca, setMarca] = useState("");
   const [precio, setPrecio] = useState("");
@@ -13,53 +11,24 @@ export default function Home() {
   const [resultado, setResultado] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [dragging, setDragging] = useState(false);
-  const fileRef = useRef(null);
 
-  const canGenerate = imgFile && sku.trim() && marca.trim() && precio.trim();
-
-  const handleFile = useCallback((file) => {
-    if (!file || !file.type.startsWith("image/")) return;
-    setImgFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => setImgPreview(e.target.result);
-    reader.readAsDataURL(file);
-    setResultado("");
-  }, []);
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragging(false);
-    handleFile(e.dataTransfer.files[0]);
-  };
+  const canGenerate = sku.trim() && marca.trim() && precio.trim();
 
   const generar = async () => {
     setLoading(true);
     setResultado("");
-
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const base64 = e.target.result.split(",")[1];
-      try {
-        const res = await fetch("/api/generar", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: base64,
-            sku,
-            marca,
-            precio,
-            nota,
-          }),
-        });
-        const data = await res.json();
-        setResultado(data.publicacion || "Error al generar.");
-      } catch {
-        setResultado("Error de conexión. Intentá de nuevo.");
-      }
-      setLoading(false);
-    };
-    reader.readAsDataURL(imgFile);
+    try {
+      const res = await fetch("/api/generar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sku, marca, precio, nota }),
+      });
+      const data = await res.json();
+      setResultado(data.publicacion || data.error || "Error al generar.");
+    } catch {
+      setResultado("Error de conexión. Intentá de nuevo.");
+    }
+    setLoading(false);
   };
 
   const copiar = () => {
@@ -69,16 +38,9 @@ export default function Home() {
     });
   };
 
-  const resetImagen = () => {
-    setImgFile(null);
-    setImgPreview(null);
-    setResultado("");
-  };
-
   return (
     <main className={styles.main}>
       <div className={styles.container}>
-        {/* Header */}
         <header className={styles.header}>
           <div className={styles.logoMark}>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -94,50 +56,9 @@ export default function Home() {
         <div className={styles.grid}>
           {/* Left column: inputs */}
           <div className={styles.column}>
-            {/* Foto */}
             <section className={styles.card}>
               <p className={styles.label}>
                 <span className={styles.step}>1</span>
-                Foto del producto
-              </p>
-              {!imgPreview ? (
-                <div
-                  className={`${styles.dropzone} ${dragging ? styles.dropzoneDragging : ""}`}
-                  onClick={() => fileRef.current.click()}
-                  onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
-                  onDragLeave={() => setDragging(false)}
-                  onDrop={handleDrop}
-                >
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={styles.uploadIcon}>
-                    <path d="M4 16l4-4 4 4M12 12l4-4 4 4M12 12V21M20 16.5A4.5 4.5 0 0016 7a.6.6 0 01-.6-.4A7.5 7.5 0 104 15.9" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                  <p className={styles.dropText}>Hacé clic o arrastrá la foto aquí</p>
-                  <p className={styles.dropHint}>JPG, PNG, WEBP</p>
-                </div>
-              ) : (
-                <div className={styles.previewWrap}>
-                  <img src={imgPreview} alt="Preview" className={styles.preview} />
-                  <button className={styles.removeBtn} onClick={resetImagen}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                      <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round"/>
-                    </svg>
-                    Cambiar foto
-                  </button>
-                </div>
-              )}
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={(e) => handleFile(e.target.files[0])}
-              />
-            </section>
-
-            {/* Datos */}
-            <section className={styles.card}>
-              <p className={styles.label}>
-                <span className={styles.step}>2</span>
                 Datos del producto
               </p>
               <div className={styles.fields}>
@@ -171,7 +92,9 @@ export default function Home() {
                   />
                 </div>
                 <div className={styles.field}>
-                  <label className={styles.fieldLabel}>Nota extra <span className={styles.optional}>(opcional)</span></label>
+                  <label className={styles.fieldLabel}>
+                    Nota extra <span className={styles.optional}>(opcional)</span>
+                  </label>
                   <input
                     type="text"
                     placeholder="Ej: viene en set de 3 piezas"
@@ -200,7 +123,6 @@ export default function Home() {
                   Generar publicación
                 </>
               )}
-
             </button>
           </div>
 
