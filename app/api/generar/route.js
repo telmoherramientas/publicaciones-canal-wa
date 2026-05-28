@@ -20,9 +20,10 @@ PRECIO: $[precio]
 ✅ [X meses/años de garantía oficial - solo si encontrás el dato, sino omitir este punto]
 
 Reglas estrictas:
-- Usá SOLO datos reales de la búsqueda web (potencia en W, voltaje, RPM, medidas, peso, materiales, etc.)
-- PROHIBIDO: frases como "ideal para trabajos pesados", "gran rendimiento", "perfecta para profesionales", "máxima potencia", "excelente calidad" o cualquier adjetivo de marketing
-- Cada ✅ debe tener un número, unidad o dato concreto. Si no encontrás el dato, no lo pongas.`;
+- Usá datos reales de la búsqueda web. Preferí specs con números y unidades (W, V, RPM, mm, kg, m, etc.)
+- Si no encontrás un número exacto, podés describir la spec de forma factual y concreta (ej: "Luz verde visible en interiores y exteriores", "Autonivelación automática hasta ±4°")
+- PROHIBIDO: frases de marketing como "ideal para trabajos pesados", "gran rendimiento", "perfecta para profesionales", "máxima potencia", "excelente calidad", "alta durabilidad" o similares
+- Siempre completá los 4 specs + garantía (si la encontrás). Nunca dejes un ✅ vacío.`;
 
 export async function POST(request) {
   const { sku, marca, precio, nota } = await request.json();
@@ -43,7 +44,7 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
     {
       type: "web_search_20250305",
       name: "web_search",
-      max_uses: 2,
+      max_uses: 3,
     },
   ];
 
