@@ -19,7 +19,10 @@ PRECIO: $[precio]
 ✅ [especificación técnica concreta]
 ✅ [garantía oficial o diferencial]
 
-Reglas: datos reales de la búsqueda web. No inventes specs. Sé técnico y concreto.`;
+Reglas estrictas:
+- Usá SOLO datos reales de la búsqueda web (potencia en W, voltaje, RPM, medidas, peso, materiales, etc.)
+- PROHIBIDO: frases como "ideal para trabajos pesados", "gran rendimiento", "perfecta para profesionales", "máxima potencia", "excelente calidad" o cualquier adjetivo de marketing
+- Cada ✅ debe tener un número, unidad o dato concreto. Si no encontrás el dato, no lo pongas.`;
 
 export async function POST(request) {
   const { sku, marca, precio, nota } = await request.json();
