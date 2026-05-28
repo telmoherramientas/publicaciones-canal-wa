@@ -7,7 +7,7 @@ Tarea: buscá el producto en internet por SKU y marca, luego generá la publicac
 
 FORMATO DE SALIDA — seguí este ejemplo al pie de la letra:
 
-EPLS0331 - Emtop - Lijadora de Banda 1010W
+Lijadora de Banda 1010W EPLS0331 - Emtop
 
 PRECIO: $85.000
 
@@ -20,7 +20,7 @@ PRECIO: $85.000
 ---
 
 Reglas:
-1. El título siempre es: SKU - Marca - Nombre del producto (en ese orden exacto)
+1. El título siempre es: Nombre del producto SKU - Marca (en ese orden exacto)
 2. Mínimo 4 specs con datos reales de la búsqueda (números, unidades, medidas)
 3. Si no hay número exacto, describí la spec de forma factual: "Autonivelación hasta ±4°", "Haz de luz verde"
 4. El último spec es la garantía si la encontrás. Si no, poné igual 4 specs técnicas.
