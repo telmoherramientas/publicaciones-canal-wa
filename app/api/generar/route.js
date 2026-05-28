@@ -9,7 +9,7 @@ Proceso obligatorio:
 
 Formato exacto de salida (solo esto, sin saludos ni explicaciones):
 
-[Nombre completo del producto - SKU - Marca]
+[SKU - Marca - Nombre completo del producto]
 
 PRECIO: $[precio]
 
