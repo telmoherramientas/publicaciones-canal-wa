@@ -28,8 +28,16 @@ Reglas:
 6. PROHIBIDO: "ideal para", "gran rendimiento", "perfecta para", "alta durabilidad" o cualquier frase de marketing
 7. Respondé SOLO con la publicación, sin saludos ni explicaciones`;
 
+function parsePrice(str) {
+  return parseInt((str || "0").replace(/\D/g, ""), 10) || 0;
+}
+
 export async function POST(request) {
-  const { sku, marca, precio, nota } = await request.json();
+  const { sku, marca, precio, nota, umbral } = await request.json();
+
+  const precioNum = parsePrice(precio);
+  const umbralNum = parsePrice(umbral || "65000");
+  const footer = precioNum >= umbralNum ? FOOTER : "";
 
   // Strip BOM that PowerShell sometimes injects into env vars
   const ANTHROPIC_API_KEY = (process.env.ANTHROPIC_API_KEY || "").replace(/^﻿/, "");
@@ -104,5 +112,5 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
     break;
   }
 
-  return Response.json({ publicacion: texto + FOOTER });
+  return Response.json({ publicacion: texto + footer });
 }

@@ -104,6 +104,102 @@
   flex-shrink: 0;
 }
 
+/* Umbral */
+.cardUmbral {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+}
+
+.umbralHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.umbralTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.umbralDesc {
+  font-size: 11px;
+  color: var(--text-hint);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+.lockBtn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border-strong);
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.lockBtnLocked {
+  color: var(--text-hint);
+}
+
+.lockBtnLocked:hover {
+  color: var(--orange);
+  border-color: var(--orange);
+}
+
+.lockBtnUnlocked {
+  color: var(--orange);
+  border-color: var(--orange);
+  background: var(--orange-light);
+}
+
+.umbralInputWrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.umbralPrefix {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.umbralInput {
+  width: 100%;
+  padding: 9px 12px;
+  border: 0.5px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+
+.umbralInput:disabled {
+  background: var(--bg);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.umbralInput:not(:disabled):focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.12);
+}
+
 /* Fields */
 .fields {
   display: flex;

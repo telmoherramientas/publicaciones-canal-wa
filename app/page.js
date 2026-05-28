@@ -11,6 +11,8 @@ export default function Home() {
   const [resultado, setResultado] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [umbral, setUmbral] = useState("65000");
+  const [umbralLocked, setUmbralLocked] = useState(true);
 
   const canGenerate = sku.trim() && marca.trim() && precio.trim();
 
@@ -21,7 +23,7 @@ export default function Home() {
       const res = await fetch("/api/generar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sku, marca, precio, nota }),
+        body: JSON.stringify({ sku, marca, precio, nota, umbral }),
       });
       const data = await res.json();
       setResultado(data.publicacion || data.error || "Error al generar.");
@@ -102,6 +104,48 @@ export default function Home() {
                     onChange={(e) => setNota(e.target.value)}
                   />
                 </div>
+              </div>
+            </section>
+
+            {/* Umbral de envío */}
+            <section className={styles.cardUmbral}>
+              <div className={styles.umbralHeader}>
+                <div>
+                  <p className={styles.umbralTitle}>Umbral de envío gratis</p>
+                  <p className={styles.umbralDesc}>
+                    El footer de envío y pago se agrega solo si el precio supera este monto
+                  </p>
+                </div>
+                <button
+                  className={`${styles.lockBtn} ${umbralLocked ? styles.lockBtnLocked : styles.lockBtnUnlocked}`}
+                  onClick={() => setUmbralLocked(!umbralLocked)}
+                  title={umbralLocked ? "Desbloquear para editar" : "Bloquear"}
+                >
+                  {umbralLocked ? (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2"/>
+                      <path d="M7 11V7a5 5 0 0110 0v4" strokeLinecap="round"/>
+                    </svg>
+                  ) : (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <rect x="3" y="11" width="18" height="11" rx="2"/>
+                      <path d="M7 11V7a5 5 0 019.9-1" strokeLinecap="round"/>
+                    </svg>
+                  )}
+                </button>
+              </div>
+              <div className={styles.umbralInputWrap}>
+                <span className={styles.umbralPrefix}>$</span>
+                <input
+                  type="text"
+                  className={styles.umbralInput}
+                  value={Number(umbral).toLocaleString("es-AR")}
+                  disabled={umbralLocked}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/\D/g, "");
+                    setUmbral(raw);
+                  }}
+                />
               </div>
             </section>
 
