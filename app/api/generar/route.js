@@ -37,7 +37,6 @@ export async function POST(request) {
   const umbralNum = parsePrice(umbral || "65000");
   const footer = precioNum >= umbralNum ? FOOTER : "";
 
-  // Strip BOM that PowerShell sometimes injects into env vars
   const ANTHROPIC_API_KEY = (process.env.ANTHROPIC_API_KEY || "").replace(/^﻿/, "");
 
   const userText = `Generá una publicación para WhatsApp para este producto:
@@ -49,13 +48,7 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
 
   const messages = [{ role: "user", content: userText }];
 
-  const tools = [
-    {
-      type: "web_search_20250305",
-      name: "web_search",
-      max_uses: 3,
-    },
-  ];
+  const tools = [{ type: "web_search_20250305", name: "web_search", max_uses: 3 }];
 
   let texto = "";
 
@@ -69,7 +62,7 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
         "anthropic-beta": "web-search-2025-03-05",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5",
+        model: "claude-sonnet-4-5",
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
         tools,
@@ -80,12 +73,14 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("Anthropic error:", data);
+      console.error("[generar] Anthropic API error:", JSON.stringify(data));
       return Response.json(
         { error: data.error?.message || "Error al llamar a la API" },
         { status: 500 }
       );
     }
+
+    console.log("[generar] stop_reason:", data.stop_reason, "| content types:", data.content?.map((b) => b.type));
 
     messages.push({ role: "assistant", content: data.content });
 
@@ -93,22 +88,21 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
       texto = (data.content?.find((b) => b.type === "text")?.text ?? "")
         .replace(/\n---+\n?/g, "")
         .trim();
+      console.log("[generar] output:", texto.slice(0, 120));
       break;
     }
 
     if (data.stop_reason === "tool_use") {
       const toolResults = data.content
         .filter((b) => b.type === "tool_use")
-        .map((b) => ({
-          type: "tool_result",
-          tool_use_id: b.id,
-          content: b.content ?? [],
-        }));
+        .map((b) => ({ type: "tool_result", tool_use_id: b.id, content: b.content ?? [] }));
       messages.push({ role: "user", content: toolResults });
       continue;
     }
 
-    texto = data.content?.find((b) => b.type === "text")?.text?.trim() ?? "";
+    // Unexpected stop reason
+    console.error("[generar] Unexpected stop_reason:", data.stop_reason);
+    texto = (data.content?.find((b) => b.type === "text")?.text ?? "").trim();
     break;
   }
 
