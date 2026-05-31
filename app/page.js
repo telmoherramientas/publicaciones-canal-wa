@@ -11,6 +11,7 @@ export default function Home() {
   const [resultado, setResultado] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [url, setUrl] = useState("");
   const [umbral, setUmbral] = useState("65000");
   const [umbralLocked, setUmbralLocked] = useState(true);
 
@@ -23,7 +24,7 @@ export default function Home() {
       const res = await fetch("/api/generar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sku, marca, precio, nota, umbral }),
+        body: JSON.stringify({ sku, marca, precio, nota, umbral, url }),
       });
       const data = await res.json();
       setResultado(data.publicacion || data.error || "Error al generar.");
@@ -91,6 +92,17 @@ export default function Home() {
                     placeholder="Ej: $49.000"
                     value={precio}
                     onChange={(e) => setPrecio(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>
+                    Link del producto <span className={styles.optional}>(opcional — MercadoLibre, fabricante, etc.)</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://www.mercadolibre.com.ar/..."
+                    value={url}
+                    onChange={(e) => setUrl(e.target.value)}
                   />
                 </div>
                 <div className={styles.field}>

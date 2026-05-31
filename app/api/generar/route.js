@@ -33,7 +33,7 @@ function parsePrice(str) {
 }
 
 export async function POST(request) {
-  const { sku, marca, precio, nota, umbral } = await request.json();
+  const { sku, marca, precio, nota, umbral, url } = await request.json();
 
   const precioNum = parsePrice(precio);
   const umbralNum = parsePrice(umbral || "65000");
@@ -46,7 +46,11 @@ export async function POST(request) {
 - Marca: ${marca}
 - Precio: ${precio}${nota ? "\n- Nota: " + nota : ""}
 
-Buscá "${sku} ${marca}" en MercadoLibre Argentina para obtener las especificaciones técnicas. Luego generá la publicación en el formato indicado, empezando directamente con el título.`;
+${url
+    ? `Entrá a esta URL y extraé las especificaciones técnicas del producto: ${url}`
+    : `Buscá "${sku} ${marca}" en MercadoLibre Argentina para obtener las especificaciones técnicas.`}
+
+Luego generá la publicación en el formato indicado, empezando directamente con el título.`;
 
   const messages = [{ role: "user", content: userText }];
 
