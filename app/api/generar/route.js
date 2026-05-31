@@ -46,7 +46,7 @@ export async function POST(request) {
 - Marca: ${marca}
 - Precio: ${precio}${nota ? "\n- Nota: " + nota : ""}
 
-Buscá "${sku} ${marca}" en internet, luego generá la publicación directamente con el formato indicado. La primera línea debe ser el título del producto, sin ningún texto previo.`;
+Buscá "${sku} ${marca} site:mercadolibre.com.ar" en internet para obtener las especificaciones técnicas. Si no encontrás resultados, buscá "${sku} ${marca} especificaciones". Luego generá la publicación directamente con el formato indicado. La primera línea debe ser el título del producto, sin ningún texto previo.`;
 
   const messages = [{ role: "user", content: userText }];
 
