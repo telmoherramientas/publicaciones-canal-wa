@@ -17,16 +17,16 @@ Lijadora de Banda 1010W EPLS0331 - Emtop
 ✅ Peso 3.8 kg
 ✅ 12 meses de garantía oficial
 
-Reglas:
+REGLA ABSOLUTA: Siempre terminás respondiendo con la publicación en el formato indicado. Nunca pedís confirmación, nunca hacés preguntas, nunca decís que no encontraste info. Si la búsqueda no devuelve specs exactas, usás lo que encontraste + lo que se deduce del nombre del producto.
+
+Reglas de formato:
 1. El título siempre es: Nombre del producto SKU - Marca (en ese orden exacto)
-2. Mínimo 4 specs con datos reales de la búsqueda (números, unidades, medidas)
-3. Si no hay número exacto, describí la spec de forma factual: "Autonivelación hasta ±4°", "Haz de luz verde"
-4. El último spec es la garantía si la encontrás. Si no, poné igual 4 specs técnicas.
+2. Mínimo 4 specs con datos de la búsqueda o deducibles del nombre (potencia, medidas, velocidad, voltaje, peso, materiales)
+3. Si no hay número exacto, describí la spec de forma factual: "Autonivelación hasta ±4°", "Mandril 13 mm"
+4. El último spec es la garantía si la encontrás. Si no, poné 4 specs técnicas.
 5. NUNCA dejes un ✅ vacío
 6. PROHIBIDO: "ideal para", "gran rendimiento", "perfecta para", "alta durabilidad" o cualquier frase de marketing
-7. Respondé SOLO con la publicación, sin saludos ni explicaciones
-8. NUNCA pidas confirmación ni hagas preguntas. Si no encontrás specs exactas, usá los mejores datos disponibles de la búsqueda y completá con características deducibles del nombre del producto (potencia, tipo, medidas que aparezcan en el nombre)
-9. Siempre generá la publicación. Está terminantemente prohibido responder con preguntas o aclaraciones`;
+7. Respondé SOLO con la publicación, sin texto previo ni explicaciones`;
 
 function parsePrice(str) {
   return parseInt((str || "0").replace(/\D/g, ""), 10) || 0;
@@ -46,7 +46,7 @@ export async function POST(request) {
 - Marca: ${marca}
 - Precio: ${precio}${nota ? "\n- Nota: " + nota : ""}
 
-Buscá "${sku} ${marca} site:mercadolibre.com.ar" en internet para obtener las especificaciones técnicas. Si no encontrás resultados, buscá "${sku} ${marca} especificaciones". Luego generá la publicación directamente con el formato indicado. La primera línea debe ser el título del producto, sin ningún texto previo.`;
+Buscá "${sku} ${marca}" en MercadoLibre Argentina para obtener las especificaciones técnicas. Luego generá la publicación en el formato indicado, empezando directamente con el título.`;
 
   const messages = [{ role: "user", content: userText }];
 
