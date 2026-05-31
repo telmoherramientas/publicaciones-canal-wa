@@ -15,7 +15,7 @@ export default function Home() {
   const [umbral, setUmbral] = useState("65000");
   const [umbralLocked, setUmbralLocked] = useState(true);
 
-  const canGenerate = sku.trim() && marca.trim() && precio.trim();
+  const canGenerate = precio.trim() && (url.trim() || (sku.trim() && marca.trim()));
 
   const generar = async () => {
     setLoading(true);
@@ -67,7 +67,7 @@ export default function Home() {
               <div className={styles.fields}>
                 <div className={styles.fieldRow}>
                   <div className={styles.field}>
-                    <label className={styles.fieldLabel}>SKU</label>
+                    <label className={styles.fieldLabel}>SKU {url.trim() && <span className={styles.optional}>(opcional con link)</span>}</label>
                     <input
                       type="text"
                       placeholder="Ej: EPLS0331"
@@ -76,7 +76,7 @@ export default function Home() {
                     />
                   </div>
                   <div className={styles.field}>
-                    <label className={styles.fieldLabel}>Marca</label>
+                    <label className={styles.fieldLabel}>Marca {url.trim() && <span className={styles.optional}>(opcional con link)</span>}</label>
                     <input
                       type="text"
                       placeholder="Ej: Emtop"
