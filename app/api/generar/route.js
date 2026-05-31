@@ -46,7 +46,12 @@ export async function POST(request) {
 - Marca: ${marca}
 - Precio: ${precio}${nota ? "\n- Nota: " + nota : ""}
 
-Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas reales y generá la publicación con el formato indicado.`;
+Buscá en internet usando estas queries en orden hasta encontrar specs:
+1. "${marca} ${sku} especificaciones"
+2. "${marca} ${sku} ficha técnica"
+3. "${sku} ${marca} Argentina"
+
+Luego generá la publicación directamente con el formato indicado. La primera línea debe ser el título del producto, sin ningún texto previo.`;
 
   const messages = [{ role: "user", content: userText }];
 
@@ -87,9 +92,11 @@ Buscá "${marca} ${sku}" en internet para obtener las especificaciones técnicas
     messages.push({ role: "assistant", content: data.content });
 
     if (data.stop_reason === "end_turn") {
-      texto = (data.content?.find((b) => b.type === "text")?.text ?? "")
-        .replace(/\n---+\n?/g, "")
-        .trim();
+      const raw = (data.content?.find((b) => b.type === "text")?.text ?? "").replace(/\n---+\n?/g, "");
+      // Drop any intro paragraph — find the line containing the SKU (the real title)
+      const lines = raw.split("\n");
+      const titleIdx = lines.findIndex((l) => l.includes(sku));
+      texto = (titleIdx > 0 ? lines.slice(titleIdx).join("\n") : raw).trim();
       console.log("[generar] output:", texto.slice(0, 120));
       break;
     }
