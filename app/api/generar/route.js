@@ -24,7 +24,9 @@ Reglas:
 4. El último spec es la garantía si la encontrás. Si no, poné igual 4 specs técnicas.
 5. NUNCA dejes un ✅ vacío
 6. PROHIBIDO: "ideal para", "gran rendimiento", "perfecta para", "alta durabilidad" o cualquier frase de marketing
-7. Respondé SOLO con la publicación, sin saludos ni explicaciones`;
+7. Respondé SOLO con la publicación, sin saludos ni explicaciones
+8. NUNCA pidas confirmación ni hagas preguntas. Si no encontrás specs exactas, usá los mejores datos disponibles de la búsqueda y completá con características deducibles del nombre del producto (potencia, tipo, medidas que aparezcan en el nombre)
+9. Siempre generá la publicación. Está terminantemente prohibido responder con preguntas o aclaraciones`;
 
 function parsePrice(str) {
   return parseInt((str || "0").replace(/\D/g, ""), 10) || 0;
