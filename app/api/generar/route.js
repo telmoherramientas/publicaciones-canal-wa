@@ -46,12 +46,7 @@ export async function POST(request) {
 - Marca: ${marca}
 - Precio: ${precio}${nota ? "\n- Nota: " + nota : ""}
 
-Buscá en internet usando estas queries en orden hasta encontrar specs:
-1. "${marca} ${sku} especificaciones"
-2. "${marca} ${sku} ficha técnica"
-3. "${sku} ${marca} Argentina"
-
-Luego generá la publicación directamente con el formato indicado. La primera línea debe ser el título del producto, sin ningún texto previo.`;
+Buscá "${sku} ${marca}" en internet, luego generá la publicación directamente con el formato indicado. La primera línea debe ser el título del producto, sin ningún texto previo.`;
 
   const messages = [{ role: "user", content: userText }];
 
