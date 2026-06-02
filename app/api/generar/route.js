@@ -32,6 +32,21 @@ function parsePrice(str) {
   return parseInt((str || "0").replace(/\D/g, ""), 10) || 0;
 }
 
+// Intro phrases the model sometimes prepends before the actual publication
+const INTRO_RE = /^(aquí|acá|here|a continuación|te presento|claro|listo|por supuesto|entendido|perfecto|ok\b)/i;
+
+function stripIntro(raw, sku) {
+  const lines = raw.split("\n");
+  let titleIdx;
+  if (sku.trim()) {
+    titleIdx = lines.findIndex((l) => l.includes(sku));
+  } else {
+    // URL-only mode: find first non-empty line that isn't an intro sentence
+    titleIdx = lines.findIndex((l) => l.trim() && !INTRO_RE.test(l.trim()));
+  }
+  return (titleIdx > 0 ? lines.slice(titleIdx).join("\n") : raw).trim();
+}
+
 export async function POST(request) {
   const { sku, marca, precio, nota, umbral, url } = await request.json();
 
@@ -46,9 +61,11 @@ export async function POST(request) {
 - Marca: ${marca}
 - Precio: ${precio}${nota ? "\n- Nota: " + nota : ""}
 
-${url
-    ? `Entrá a esta URL y extraé las especificaciones técnicas del producto: ${url}`
-    : `Buscá "${sku} ${marca}" en MercadoLibre Argentina para obtener las especificaciones técnicas.`}
+${
+    url
+      ? `Entrá a esta URL y extraé las especificaciones técnicas del producto: ${url}`
+      : `Buscá "${sku} ${marca}" en MercadoLibre Argentina para obtener las especificaciones técnicas.`
+  }
 
 Luego generá la publicación en el formato indicado, empezando directamente con el título.`;
 
@@ -68,7 +85,7 @@ Luego generá la publicación en el formato indicado, empezando directamente con
         "anthropic-beta": "web-search-2025-03-05",
       },
       body: JSON.stringify({
-        model: "claude-sonnet-4-5",
+        model: "claude-sonnet-4-6",
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
         tools,
@@ -92,10 +109,7 @@ Luego generá la publicación en el formato indicado, empezando directamente con
 
     if (data.stop_reason === "end_turn") {
       const raw = (data.content?.find((b) => b.type === "text")?.text ?? "").replace(/\n---+\n?/g, "");
-      // Drop any intro paragraph — find the line containing the SKU (the real title)
-      const lines = raw.split("\n");
-      const titleIdx = lines.findIndex((l) => l.includes(sku));
-      texto = (titleIdx > 0 ? lines.slice(titleIdx).join("\n") : raw).trim();
+      texto = stripIntro(raw, sku);
       console.log("[generar] output:", texto.slice(0, 120));
       break;
     }
